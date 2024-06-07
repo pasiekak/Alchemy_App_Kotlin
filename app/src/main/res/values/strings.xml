@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">NJP_alchemy_app</string>
+    <string name="game_title">ALCHEMY</string>
+    <string name="welcome_msg_1">Kotlin</string>
+    <string name="welcome_msg_2">by pasiekak</string>
+    <string name="welcome_msg_3">Projekt w ramach przedmiotu, &quot;Nowoczesne Języki Programowania&quot;</string>
+    <string name="welcome_button">Start</string>
+    <string name="known_elements">Odkryte elementy</string>
+    <string name="reset_button">Reset gry</string>
+    <string name="reset_craft_button">Wyczyść plansze</string>
+</resources>

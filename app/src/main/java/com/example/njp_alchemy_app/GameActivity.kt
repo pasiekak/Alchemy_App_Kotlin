@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.widget.TableLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.example.njp_alchemy_app.entity.Combination
@@ -46,12 +47,13 @@ class GameActivity : AppCompatActivity() {
         syncDatabaseWithIcons()
 
         allElements = appDatabase.elementDao().getAll()
+        println("ELEMENTS $allElements")
         combinations = appDatabase.combinationDao().getAll()
         knownElements = mutableListOf(
-            Element(R.drawable.fire_icon, "Ogień"),
-            Element(R.drawable.water_icon, "Woda"),
-            Element(R.drawable.air_icon, "Powietrze"),
-            Element(R.drawable.dirt_icon, "Ziemia")
+            Element("fire_icon", R.drawable.fire_icon, "Ogień"),
+            Element("water_icon",R.drawable.water_icon, "Woda"),
+            Element("air_icon",R.drawable.air_icon, "Powietrze"),
+            Element("dirt_icon",R.drawable.dirt_icon, "Ziemia")
         )
 
         alchemy = Alchemy(this@GameActivity, appDatabase, tableLayout, frameLayout, scoreView, allElements, knownElements, combinations)
@@ -75,10 +77,11 @@ class GameActivity : AppCompatActivity() {
         val fields: Array<Field> = drawableClass.declaredFields
         for (field in fields) {
             try {
-                val name: String = field.getName()
-                if(name.contains("icon")) {
-                    val value: Int = field.getInt(null)
-                    println("DRAWABLE: $name, $value")
+                val icon_name: String = field.getName()
+                if(icon_name.contains("icon")) {
+                    val IdRes: Int = field.getInt(null)
+                    appDatabase.elementDao().updateIdRes(icon_name, IdRes)
+                    println("DRAWABLE: $icon_name, $IdRes")
                 }
             } catch (e: IllegalAccessException) {
                 e.printStackTrace()

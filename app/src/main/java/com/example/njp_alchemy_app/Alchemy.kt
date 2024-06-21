@@ -30,10 +30,10 @@ class Alchemy(
 
     fun refreshGame() {
         knownElements = mutableListOf(
-            Element(R.drawable.fire_icon, "Ogień"),
-            Element(R.drawable.water_icon, "Woda"),
-            Element(R.drawable.air_icon, "Powietrze"),
-            Element(R.drawable.dirt_icon, "Ziemia")
+            Element("fire_icon",R.drawable.fire_icon, "Ogień"),
+            Element("water_icon",R.drawable.water_icon, "Woda"),
+            Element("air_icon",R.drawable.air_icon, "Powietrze"),
+            Element("dirt_icon",R.drawable.dirt_icon, "Ziemia")
         )
         discoveredElements = 4
         refreshTable()
@@ -42,6 +42,7 @@ class Alchemy(
     }
     fun refreshTable() {
         tableLayout.removeAllViews()
+        tableLayout.setPadding(0,0,0,20)
 
         val numberOfRows = ceil(knownElements.size / 4.0).toInt()
         scoreTextView.text = "Odkryto: $discoveredElements/$numberOfElements"
@@ -77,7 +78,7 @@ class Alchemy(
 
                     // Tworzenie TextView i dodawanie do LinearLayout
                     val textView = TextView(context).apply {
-                        text = element.name
+                        text = element.polish_name
 
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -103,8 +104,8 @@ class Alchemy(
     fun clearCraftSpace() {
         frameLayout.removeAllViews()
     }
-    fun createNewElementInFrameLayout(name: String, IdRes: Int, x: Float? = null, y: Float? = null) {
-        val element = ElementView(context, Element(IdRes, name), this)
+    fun createNewElementInFrameLayout(element: Element, x: Float? = null, y: Float? = null) {
+        val element = ElementView(context, element, this)
         val maxX = frameLayout.width - 128
         val maxY = frameLayout.height - 128
         val randomX = x ?: Random.nextInt(0, maxX).toFloat()
@@ -122,7 +123,7 @@ class Alchemy(
         if (result != null) {
             val element = database.elementDao().getOneByName(result)
             if(element != null) {
-                if(!knownElements.any { it.name == result }) {
+                if(!knownElements.any { it.icon_name == result }) {
                     discoveredElements += 1
                     knownElements.add(element)
                     refreshTable()
@@ -133,20 +134,20 @@ class Alchemy(
                     }
                 }
 
-                createNewElementInFrameLayout(element.name, element.IdRes, v1.x, v1.y)
+                createNewElementInFrameLayout(element, v1.x, v1.y)
                 frameLayout.removeView(v1)
                 frameLayout.removeView(v2)
             }
         }
     }
     fun combineElements(e1: Element, e2: Element): String? {
-        return database.combinationDao().getCombination(e1.name, e2.name)
+        return database.combinationDao().getCombination(e1.icon_name, e2.icon_name)
     }
     fun showNewElementDialog(newElement: Element) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Odkryto nowy element!!!")
-        builder.setMessage("Odkryłeś element: ${newElement.name}")
-        builder.setIcon(newElement.IdRes)
+        builder.setMessage("Odkryłeś element: ${newElement.polish_name}")
+        newElement.IdRes?.let { builder.setIcon(it) }
         builder.setPositiveButton("OK") {
             dialog, _ -> dialog.dismiss()
         }

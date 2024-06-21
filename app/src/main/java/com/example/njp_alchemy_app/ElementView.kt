@@ -23,7 +23,7 @@ class ElementView(
 
 
     init {
-        setImageResource(element.IdRes)
+        element.IdRes?.let { setImageResource(it) }
 
         // Przypisz listener obsługujący zdarzenia dotykowe
         setOnTouchListener { view, event ->
@@ -53,7 +53,7 @@ class ElementView(
                     view.performClick()
 
                     if (this.parent is TableRow || this.parent is TableLayout || this.parent is LinearLayout) {
-                        alchemy.createNewElementInFrameLayout(element.name, element.IdRes)
+                        alchemy.createNewElementInFrameLayout(element)
                     }
                     if (parent is FrameLayout) {
                         val frameLayoutParent = parent as FrameLayout
